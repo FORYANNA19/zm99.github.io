@@ -276,12 +276,14 @@
             // 随机排序数据
             const shuffledData = shuffleArray([...productionData]);
             
-            // 渲染项目
+            // 渲染项目 - 改为使用div而不是a标签
             shuffledData.forEach(item => {
-                const masonryItem = document.createElement('a');
+                const masonryItem = document.createElement('div');
                 masonryItem.className = 'masonry-item';
-                masonryItem.href = item.audio;
-                masonryItem.target = '_blank';
+                masonryItem.dataset.title = item.title;
+                masonryItem.dataset.author = item.author;
+                masonryItem.dataset.audio = item.audio;
+                
                 masonryItem.innerHTML = `
                     <div class="item-content">
                         <h3 class="item-title">${item.title}</h3>
@@ -289,7 +291,31 @@
                     </div>
                 `;
                 
+                // 为卡片添加点击事件
+                masonryItem.addEventListener('click', function() {
+                    playAudio(item);
+                });
+                
                 masonryGrid.appendChild(masonryItem);
+            });
+        }
+        
+        // 播放音频函数
+        function playAudio(item) {
+            const modalTitle = document.getElementById('modalTitle');
+            const modalAuthor = document.getElementById('modalAuthor');
+            const modalAudio = document.getElementById('modalAudio');
+            const randomModal = document.getElementById('randomModal');
+            
+            modalTitle.textContent = item.title;
+            modalAuthor.textContent = item.author;
+            modalAudio.src = item.audio;
+            
+            randomModal.style.display = 'flex';
+            
+            // 自动播放音频
+            modalAudio.play().catch(e => {
+                console.log("自动播放被阻止:", e);
             });
         }
         
@@ -298,8 +324,6 @@
             const randomBtn = document.getElementById('randomBtn');
             const randomModal = document.getElementById('randomModal');
             const closeModal = document.getElementById('closeModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalAuthor = document.getElementById('modalAuthor');
             const modalAudio = document.getElementById('modalAudio');
             
             // 随机播放功能
@@ -311,17 +335,7 @@
                 
                 const randomIndex = Math.floor(Math.random() * productionData.length);
                 const randomItem = productionData[randomIndex];
-                
-                modalTitle.textContent = randomItem.title;
-                modalAuthor.textContent = randomItem.author;
-                modalAudio.src = randomItem.audio;
-                
-                randomModal.style.display = 'flex';
-                
-                // 自动播放音频
-                modalAudio.play().catch(e => {
-                    console.log("自动播放被阻止:", e);
-                });
+                playAudio(randomItem);
             });
             
             // 关闭弹窗
@@ -340,11 +354,10 @@
                 }
             });
             
-            // 初始化内容 - 改为加载JSON数据
+            // 初始化内容
             loadProductionData();
         });
     </script>
 </body>
-
 </html>
 
