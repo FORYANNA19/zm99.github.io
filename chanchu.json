@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "title": "你做什么选择什么决定我都支持你",
+        "author": "海边月亮",
+        "audio": "audio/song1.mp3"
+    },
+    {
+        "id": 2,
+        "title": "你不叫第一名，也不叫好学生，你就是何家浩",
+        "author": "归棹",
+        "audio": "audio/song2.mp3"
+    },
+    {
+        "id": 3,
+        "title": "天塌下来，我和你扛着",
+        "author": "归棹",
+        "audio": "audio/song3.mp3"
+    },
+    {
+        "id": 4,
+        "title": "你可以做扛起家族重任的男子汉，也可以只做自己的男子汉",
+        "author": "归棹",
+        "audio": "audio/song4.mp3"
+    },
+    {
+        "id": 5,
+        "title": "我送你三千万，千万要开心，千万要健康，千万要幸福",
+        "author": "谈资",
+        "audio": "audio/song5.mp3"
+    },
+    {
+        "id": 6,
+        "title": "年年康乐，岁岁满全",
+        "author": "——to所有人",
+        "audio": "audio/song5.mp3"
+    }
+]

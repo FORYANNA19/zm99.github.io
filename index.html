@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZM男团非官方网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 首页特有样式 - 修正布局问题 */
+        body {
+            background-color: #f9f3f3;
+            display: block; /* 首页不需要flex布局 */
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            width: 100%; /* 确保容器宽度 */
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%; /* 确保内容宽度 */
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%; /* 确保section宽度 */
+        }
+        
+        .section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            width: 100%; /* 确保标题宽度 */
+        }
+        
+        .menu-list {
+            list-style: none;
+            width: 100%; /* 确保列表宽度 */
+        }
+        
+        .menu-item {
+            padding: 8px 0;
+            cursor: pointer;
+            transition: padding-left 0.2s;
+            width: 100%; /* 确保菜单项宽度 */
+        }
+        
+        .menu-item:hover {
+            padding-left: 5px;
+        }
+        
+        .subtitle {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        .submission {
+            margin-top: 25px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%; /* 确保投稿处宽度 */
+        }
+        
+        .submission:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 皮肤样式 - 首页特有 */
+        .skin-red-active .section-title,
+        .skin-red-active .menu-item,
+        .skin-red-active .submission h2 {
+            color: #b01f24;
+        }
+        
+        .skin-blue-active .section-title,
+        .skin-blue-active .menu-item,
+        .skin-blue-active .submission h2 {
+            color: #1976D2;
+        }
+        
+        .skin-green-active .section-title,
+        .skin-green-active .menu-item,
+        .skin-green-active .submission h2 {
+            color: #21A6B1;
+        }
+        
+        /* 答题弹窗样式 */
+        .quiz-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quiz-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .quiz-title {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .quiz-progress {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .quiz-question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #87CEEB;
+        }
+        
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background-color: #f0f8ff;
+            border-color: #87CEEB;
+        }
+        
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: #1976D2;
+        }
+        
+        .option input {
+            margin-right: 10px;
+        }
+        
+        .quiz-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        
+        .quiz-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .next-btn {
+            background-color: #1e5799;
+            color: white;
+        }
+        
+        .next-btn:hover {
+            background-color: #16457a;
+        }
+        
+        .next-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .result-message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+            min-height: 24px;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .quiz-complete {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .complete-title {
+            color: #28a745;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .complete-message {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .enter-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .enter-btn:hover {
+            background-color: #218838;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header {
+                padding: 8px 15px;
+            }
+            
+            .logo {
+                font-size: 16px;
+            }
+            
+            .container {
+                padding: 0 15px; /* 移动端调整内边距 */
+            }
+            
+            .quiz-content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%; /* 小屏幕上使用全宽 */
+                padding: 0 10px;
+            }
+            
+            .quiz-content {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            .quiz-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .quiz-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="skin-blue-active">
+    <!-- 答题弹窗 -->
+    <div class="quiz-modal" id="quizModal">
+        <div class="quiz-content">
+            <h2 class="quiz-title">ZM男团猫猫大全</h2>
+            
+            <div class="quiz-progress" id="quizProgress">问题 1/3</div>
+            
+            <!-- 问题1 -->
+            <div class="quiz-question" id="question1">
+                <div class="question-text">谁是最乖的猫？</div>
+                <div class="options-container">
+                    <label class="option">
+                        <input type="radio" name="q1" value="A">
+                        A.猫老大
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="B">
+                        B.笨笨
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="C">
+                        C.卢卡库
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="D">
+                        D.刚子
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 问题2 -->
+            <div class="quiz-question" id="question2" style="display: none;">
+                <div class="question-text">谁是最欠的猫？</div>
+                <div class="options-container">
+                    <label class="option">
+                        <input type="radio" name="q2" value="A">
+                        A.小不溜
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="B">
+                        B.卡比
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="C">
+                        C.笨笨
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="D">
+                        D.deidei
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 问题3 -->
+            <div class="quiz-question" id="question3" style="display: none;">
+                <div class="question-text">谁收获了两次我们家小猫？</div>
+                <div class="options-container">
+                    <label class="option">
+                        <input type="radio" name="q3" value="A">
+                        A.小不溜
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="B">
+                        B.卡比
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="C">
+                        C.笨笨
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="D">
+                        D.deidei
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 完成页面 -->
+            <div class="quiz-complete" id="quizComplete" style="display: none;">
+                <div class="complete-title">🎉 验证成功！</div>
+                <div class="complete-message">恭喜你全部答对了！</div>
+                <button class="enter-btn" id="enterSite">进入网站</button>
+            </div>
+            
+            <div class="quiz-buttons">
+                <button class="quiz-btn next-btn" id="nextQuestion">下一题</button>
+            </div>
+            
+            <div class="result-message" id="resultMessage"></div>
+        </div>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <div class="header">
+        <div class="logo">ZM男团</div>
+        <div class="user-actions">
+            <div class="skin-switcher">
+                <div class="skin-icon skin-red" data-skin="red"></div>
+                <div class="skin-icon skin-blue" data-skin="blue"></div>
+                <div class="skin-icon skin-green" data-skin="green"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主内容区 -->
+    <div class="container">
+        <div class="main-content">
+            <div class="section" data-page="daily" data-url="richang.html">
+                <h2 class="section-title">日常营业</h2>
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        日常分享
+                        <div class="subtitle">包含各平台日常向营业和糖点集合~暂时只包括24年4月3日之后的营业！</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="section" data-page="career" data-url="yanyi.html">
+                <h2 class="section-title">演艺生涯</h2>
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        影视作品
+                        <div class="subtitle">按播出日期排序的影视作品及宣传相关，包括剧集介绍和相关营业</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="section" data-page="fashion" data-url="shishang.html">
+                <h2 class="section-title">时尚活动</h2>
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        时尚活动
+                        <div class="subtitle">包括杂志、时尚庆典和时装周</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="section" data-page="business" data-url="shangwu.html">
+                <h2 class="section-title">商务记录</h2>
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        品牌代言
+                        <div class="subtitle">各领域品牌合作记录！也包括商务直播和周边</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="section" data-page="productions" data-url="chanchu.html">
+                <h2 class="section-title">金桔合集</h2>
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        金桔抽卡
+                        <div class="subtitle">记录一些家产宝宝打动人的瞬间</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 投稿处 -->
+        <div class="submission" data-page="submission">
+            <h2 class="section-title">投稿处</h2>
+            <p>有任何疏漏请点此处反馈！</p>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script>
+        // 首页特有JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const quizModal = document.getElementById('quizModal');
+            const nextBtn = document.getElementById('nextQuestion');
+            const resultMessage = document.getElementById('resultMessage');
+            const quizProgress = document.getElementById('quizProgress');
+            const enterBtn = document.getElementById('enterSite');
+            
+            // 题目数据
+            const questions = [
+                {
+                    id: 1,
+                    text: "谁是最乖的猫？",
+                    options: [
+                        { value: "A", text: "猫老大" },
+                        { value: "B", text: "笨笨" },
+                        { value: "C", text: "卢卡库" },
+                        { value: "D", text: "刚子" }
+                    ],
+                    correctAnswer: "A"
+                },
+                {
+                    id: 2,
+                    text: "谁是最欠的猫？",
+                    options: [
+                        { value: "A", text: "小不溜" },
+                        { value: "B", text: "卡比" },
+                        { value: "C", text: "笨笨" },
+                        { value: "D", text: "deidei" }
+                    ],
+                    correctAnswer: "C"
+                },
+                {
+                    id: 3,
+                    text: "谁收获了两次我们家小猫？",
+                    options: [
+                        { value: "A", text: "小不溜" },
+                        { value: "B", text: "卡比" },
+                        { value: "C", text: "笨笨" },
+                        { value: "D", text: "deidei" }
+                    ],
+                    correctAnswer: "D"
+                }
+            ];
+            
+            let currentQuestionIndex = 0;
+            let userAnswers = {};
+            
+            // 检查是否已经通过验证
+            function hasPassedQuiz() {
+                return localStorage.getItem('quizPassed') === 'true';
+            }
+            
+            // 设置验证通过状态
+            function setQuizPassed() {
+                localStorage.setItem('quizPassed', 'true');
+            }
+            
+            // 显示弹窗
+            function showQuizModal() {
+                quizModal.style.display = 'flex';
+                showQuestion(0);
+            }
+            
+            // 隐藏弹窗
+            function hideQuizModal() {
+                quizModal.style.display = 'none';
+            }
+            
+            // 显示指定索引的问题
+            function showQuestion(index) {
+                currentQuestionIndex = index;
+                const question = questions[index];
+                
+                // 隐藏所有问题
+                document.querySelectorAll('.quiz-question').forEach(q => {
+                    q.style.display = 'none';
+                });
+                
+                // 隐藏完成页面
+                document.getElementById('quizComplete').style.display = 'none';
+                
+                // 显示当前问题
+                document.getElementById(`question${index + 1}`).style.display = 'block';
+                
+                // 更新进度
+                quizProgress.textContent = `问题 ${index + 1}/${questions.length}`;
+                
+                // 更新按钮文本
+                if (index === questions.length - 1) {
+                    nextBtn.textContent = '完成';
+                } else {
+                    nextBtn.textContent = '下一题';
+                }
+                
+                // 重置选项状态
+                resetOptionStyles();
+                
+                // 禁用按钮直到选择答案
+                nextBtn.disabled = true;
+                
+                // 清空结果消息
+                resultMessage.textContent = '';
+                resultMessage.className = 'result-message';
+            }
+            
+            // 重置选项样式
+            function resetOptionStyles() {
+                document.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+            }
+            
+            // 检查当前问题是否已回答
+            function isCurrentQuestionAnswered() {
+                const currentQuestion = questions[currentQuestionIndex];
+                return userAnswers.hasOwnProperty(currentQuestionIndex);
+            }
+            
+            // 验证当前问题的答案
+            function validateCurrentQuestion() {
+                const currentQuestion = questions[currentQuestionIndex];
+                const userAnswer = userAnswers[currentQuestionIndex];
+                
+                return userAnswer === currentQuestion.correctAnswer;
+            }
+            
+            // 显示完成页面
+            function showCompletePage() {
+                // 隐藏所有问题
+                document.querySelectorAll('.quiz-question').forEach(q => {
+                    q.style.display = 'none';
+                });
+                
+                // 隐藏按钮
+                nextBtn.style.display = 'none';
+                quizProgress.style.display = 'none';
+                
+                // 显示完成页面
+                document.getElementById('quizComplete').style.display = 'block';
+            }
+            
+            // 为选项添加点击事件
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    const questionId = radio.name.replace('q', '') - 1;
+                    const answerValue = radio.value;
+                    
+                    // 保存用户答案
+                    userAnswers[questionId] = answerValue;
+                    
+                    // 更新选中状态
+                    resetOptionStyles();
+                    this.classList.add('selected');
+                    
+                    // 启用下一题按钮
+                    nextBtn.disabled = false;
+                });
+            });
+            
+            // 下一题/完成按钮点击事件
+            nextBtn.addEventListener('click', function() {
+                // 验证当前问题答案
+                const isCorrect = validateCurrentQuestion();
+                
+                if (!isCorrect) {
+                    resultMessage.textContent = '答案错误，请重新选择！';
+                    resultMessage.className = 'result-message error';
+                    
+                    // 清空当前问题的答案，让用户重新选择
+                    delete userAnswers[currentQuestionIndex];
+                    resetOptionStyles();
+                    nextBtn.disabled = true;
+                    return;
+                }
+                
+                // 清空结果消息
+                resultMessage.textContent = '';
+                resultMessage.className = 'result-message';
+                
+                // 如果是最后一题，显示完成页面
+                if (currentQuestionIndex === questions.length - 1) {
+                    showCompletePage();
+                } else {
+                    // 否则显示下一题
+                    showQuestion(currentQuestionIndex + 1);
+                }
+            });
+            
+            // 进入网站按钮点击事件
+            enterBtn.addEventListener('click', function() {
+                // 设置验证通过状态
+                setQuizPassed();
+                // 隐藏弹窗
+                hideQuizModal();
+            });
+            
+            // 为整个板块添加点击事件
+            const sections = document.querySelectorAll('.section, .submission');
+            sections.forEach(section => {
+                section.addEventListener('click', function() {
+                    // 检查是否通过验证
+                    if (!hasPassedQuiz()) {
+                        showQuizModal();
+                        return;
+                    }
+                    
+                    const page = this.getAttribute('data-page');
+                    const url = this.getAttribute('data-url');
+                    
+                    if (url) {
+                        // 如果有URL属性，则跳转到对应页面
+                        window.location.href = url;
+                    } else {
+                        // 否则显示提示（投稿处）
+                        alert(`即将跳转到 ${this.querySelector('.section-title').textContent} 页面`);
+                    }
+                });
+            });
+            
+            // 页面加载时检查验证状态
+            if (!hasPassedQuiz()) {
+                // 延迟显示弹窗，让页面先加载完成
+                setTimeout(() => {
+                    showQuizModal();
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

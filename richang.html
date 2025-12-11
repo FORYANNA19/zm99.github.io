@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日常营业 - ZM男团非官方网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="time.css">
+    <style>
+        /* 日常营业页面特有样式 */
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .time-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        
+        /* 时间线内容 - 单列卡片布局 */
+        .timeline-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .timeline-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .timeline-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .timeline-card.expanded {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .timeline-date {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        
+        .timeline-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .timeline-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .timeline-title {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .timeline-type {
+            padding: 4px 10px;
+            background-color: #E3F2FD;
+            color: #1976D2;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .timeline-link {
+            color: #87CEEB;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .timeline-link:hover {
+            text-decoration: underline;
+        }
+        
+        .timeline-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #eee;
+            display: none;
+        }
+        
+        .timeline-card.expanded .timeline-details {
+            display: block;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .detail-label {
+            width: 80px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .detail-content {
+            flex: 1;
+            color: #333;
+        }
+        
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-size: 16px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .filter-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .tag-filter {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .timeline-main {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .timeline-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body class="skin-blue-active">
+    <div class="header">
+        <div class="logo" id="homeLink">ZM男团</div>
+        <div class="user-actions">
+            <div class="skin-switcher">
+                <div class="skin-icon skin-red" data-skin="red"></div>
+                <div class="skin-icon skin-blue" data-skin="blue"></div>
+                <div class="skin-icon skin-green" data-skin="green"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="sidebar">
+            <a href="richang.html" class="nav-item active">日常营业</a>
+            <a href="yanyi.html" class="nav-item">演艺生涯</a>
+            <a href="shishang.html" class="nav-item">时尚活动</a>
+            <a href="shangwu.html" class="nav-item">商务记录</a>
+            <a href="chanchu.html" class="nav-item">金桔抽卡</a>
+        </div>
+        
+        <div class="content">
+            <div class="filter-section">
+                <div class="time-filter">
+                    <div class="year-selector" id="yearSelector">
+                        <span id="currentYear">2024年</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="month-selector" id="monthSelector">
+                        <span id="currentMonth">4月</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                
+                <div class="tag-filter">
+                    <div class="tag active" data-tag="all">全部</div>
+                    <div class="tag" data-tag="双人物料">双人物料</div>
+                    <div class="tag" data-tag="单人物料">单人物料</div>
+                    <div class="tag" data-tag="糖果">糖果</div>
+                    <div class="tag" data-tag="归棹">归棹</div>
+                    <div class="tag" data-tag="官方">官方</div>
+                    <div class="tag" data-tag="路透">路透</div>
+                    <div class="tag" data-tag="微博">微博</div>
+                    <div class="tag" data-tag="抖音">抖音</div>
+                    <div class="tag" data-tag="小红书">小红书</div>
+                    <div class="tag" data-tag="手势舞">手势舞</div>
+                </div>
+            </div>
+            
+            <div class="timeline-content" id="timelineContent"></div>
+        </div>
+    </div>
+    <script src="common.js"></script>
+    <script src="time.js"></script>
+    <script>
+        let timelineData = [];
+        let activeTag = 'all';
+
+        // 加载JSON数据
+        async function loadTimelineData() {
+            try {
+                const response = await fetch('richang.json');
+                if (!response.ok) {
+                    throw new Error('网络响应不正常');
+                }
+                timelineData = await response.json();
+                filterContent();
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                document.getElementById('timelineContent').innerHTML = 
+                    '<div class="no-data">数据加载失败，请刷新页面重试</div>';
+            }
+        }
+
+        function filterContent() {
+            let filteredData = [...timelineData];
+            
+            if (window.timeFilter) {
+                filteredData = window.timeFilter.filterByTime(filteredData);
+            }
+            
+            if (activeTag !== 'all') {
+                filteredData = filteredData.filter(item => 
+                    item.tags.includes(activeTag)
+                );
+            }
+            
+            renderTimeline(filteredData);
+        }
+
+        window.filterContent = filterContent;
+
+        function renderTimeline(data) {
+            const timelineContent = document.getElementById('timelineContent');
+            timelineContent.innerHTML = '';
+    
+            if (data.length === 0) {
+                timelineContent.innerHTML = '<div class="no-data">暂无数据</div>';
+                return;
+            }
+    
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'timeline-card';
+                card.innerHTML = `
+                    <div class="timeline-date">${item.date}</div>
+                    <div class="timeline-main">
+                        <div class="timeline-info">
+                            <div class="timeline-title">${item.title}</div>
+                            <div class="timeline-type">${item.type}</div>
+                        </div>
+                        <div class="timeline-link">查看详细 <i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="timeline-details">
+                        ${Object.entries(item.details).map(([key, value]) => {
+                    // 判断是否为链接字段且包含http
+                            if (key === '链接地址' && value && value.startsWith('http')) {
+                                return `
+                                    <div class="detail-item">
+                                        <span class="detail-label">${key}：</span>
+                                        <span class="detail-content">
+                                            <a href="${value}" target="_blank" class="detail-link">点我跳转</a>
+                                        </span>
+                                    </div>
+                        `       ;
+                            } else {
+                                return `
+                                    <div class="detail-item">
+                                        <span class="detail-label">${key}：</span>
+                                        <span class="detail-content">${value}</span>
+                                    </div>
+                        `       ;
+                            }
+                        }).join('')}
+                    </div>
+        `       ;
+        
+                timelineContent.appendChild(card);
+            });
+    
+            bindCardEvents();
+        }
+
+        function bindCardEvents() {
+            const timelineLinks = document.querySelectorAll('.timeline-link');
+            timelineLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const card = this.closest('.timeline-card');
+                    const isExpanded = card.classList.contains('expanded');
+                    
+                    document.querySelectorAll('.timeline-card').forEach(c => {
+                        c.classList.remove('expanded');
+                        c.querySelector('.timeline-link').innerHTML = '查看详细 <i class="fas fa-chevron-down"></i>';
+                    });
+                    
+                    if (!isExpanded) {
+                        card.classList.add('expanded');
+                        this.innerHTML = '收起详细 <i class="fas fa-chevron-up"></i>';
+                    }
+                });
+            });
+            
+            const timelineCards = document.querySelectorAll('.timeline-card');
+            timelineCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('timeline-link')) {
+                        const link = this.querySelector('.timeline-link');
+                        this.classList.remove('expanded');
+                        link.innerHTML = '查看详细 <i class="fas fa-chevron-down"></i>';
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const homeLink = document.getElementById('homeLink');
+            if (homeLink) {
+                homeLink.addEventListener('click', function() {
+                    window.location.href = 'class1.html';
+                });
+            }
+            
+            const skinIcons = document.querySelectorAll('.skin-icon');
+            skinIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const skin = this.getAttribute('data-skin');
+                    document.body.classList.remove('skin-red-active', 'skin-blue-active', 'skin-green-active');
+                    document.body.classList.add(`skin-${skin}-active`);
+                });
+            });
+            
+            const tags = document.querySelectorAll('.tag');
+            tags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    tags.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    activeTag = this.getAttribute('data-tag');
+                    filterContent();
+                });
+            });
+            
+            initTimeFilter();
+            loadTimelineData(); // 改为加载JSON数据
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金桔抽卡 - ZM男团非官方网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 产出合集页面特有样式 */
+        /* 瀑布流布局 */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            align-items: start;
+        }
+        
+        .masonry-item {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .masonry-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .item-content {
+            padding: 16px;
+            width: 100%;
+        }
+        
+        .item-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #555;
+            line-height: 1.5;
+            margin: 0 0 8px 0;
+        }
+        
+        .item-author {
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+        }
+        
+        /* 随机按钮 */
+        .random-btn {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 12px 30px;
+            background-color: #1e5799;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(30, 87, 153, 0.2);
+        }
+        
+        .random-btn:hover {
+            background-color: #16457a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(30, 87, 153, 0.3);
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .modal-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .modal-author {
+            font-size: 13px;
+            color: #888;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .modal-audio {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #888;
+        }
+        
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-size: 16px;
+            grid-column: 1 / -1;
+        }
+        
+        /* 皮肤样式 */
+        .skin-red-active .random-btn {
+            background-color: #b01f24;
+            box-shadow: 0 4px 8px rgba(176, 31, 36, 0.2);
+        }
+        
+        .skin-red-active .random-btn:hover {
+            background-color: #8a191d;
+            box-shadow: 0 6px 12px rgba(176, 31, 36, 0.3);
+        }
+        
+        .skin-green-active .random-btn {
+            background-color: #21A6B1;
+            box-shadow: 0 4px 8px rgba(33, 166, 177, 0.2);
+        }
+        
+        .skin-green-active .random-btn:hover {
+            background-color: #1a858e;
+            box-shadow: 0 6px 12px rgba(33, 166, 177, 0.3);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .masonry-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .masonry-item {
+                height: 150px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .masonry-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="skin-blue-active">
+    <!-- 顶部导航栏 -->
+    <div class="header">
+        <div class="logo" id="homeLink">ZM男团</div>
+        <div class="user-actions">
+            <div class="skin-switcher">
+                <div class="skin-icon skin-red" data-skin="red"></div>
+                <div class="skin-icon skin-blue" data-skin="blue"></div>
+                <div class="skin-icon skin-green" data-skin="green"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主内容区 -->
+    <div class="main-container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <a href="richang.html" class="nav-item">日常营业</a>
+            <a href="yanyi.html" class="nav-item">演艺生涯</a>
+            <a href="shishang.html" class="nav-item">时尚活动</a>
+            <a href="shangwu.html" class="nav-item">商务记录</a>
+            <a href="chanchu.html" class="nav-item active">金桔抽卡</a>
+        </div>
+        
+        <!-- 右侧内容区 -->
+        <div class="content">
+            <!-- 随机按钮 -->
+            <button class="random-btn" id="randomBtn">抽取今日幸运金桔！</button>
+            
+            <!-- 瀑布流内容 -->
+            <div class="masonry-grid" id="masonryGrid">
+                <!-- 内容将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="modal" id="randomModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <h3 class="modal-title" id="modalTitle">随机音频</h3>
+            <p class="modal-author" id="modalAuthor"></p>
+            <audio class="modal-audio" id="modalAudio" controls autoplay>
+                您的浏览器不支持音频元素。
+            </audio>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script>
+        // 产出合集页面数据 - 从JSON文件加载
+        let productionData = [];
+
+        // 加载JSON数据
+        async function loadProductionData() {
+            try {
+                const response = await fetch('chanchu.json');
+                if (!response.ok) {
+                    throw new Error('网络响应不正常');
+                }
+                productionData = await response.json();
+                renderContent();
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                document.getElementById('masonryGrid').innerHTML = 
+                    '<div class="no-data">数据加载失败，请刷新页面重试</div>';
+            }
+        }
+
+        // 随机排序数组
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // 渲染内容函数
+        function renderContent() {
+            const masonryGrid = document.getElementById('masonryGrid');
+            masonryGrid.innerHTML = '';
+            
+            if (productionData.length === 0) {
+                masonryGrid.innerHTML = '<div class="no-data">暂无数据</div>';
+                return;
+            }
+            
+            // 随机排序数据
+            const shuffledData = shuffleArray([...productionData]);
+            
+            // 渲染项目
+            shuffledData.forEach(item => {
+                const masonryItem = document.createElement('a');
+                masonryItem.className = 'masonry-item';
+                masonryItem.href = item.audio;
+                masonryItem.target = '_blank';
+                masonryItem.innerHTML = `
+                    <div class="item-content">
+                        <h3 class="item-title">${item.title}</h3>
+                        <div class="item-author">${item.author}</div>
+                    </div>
+                `;
+                
+                masonryGrid.appendChild(masonryItem);
+            });
+        }
+        
+        // 产出合集页面特有JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const randomBtn = document.getElementById('randomBtn');
+            const randomModal = document.getElementById('randomModal');
+            const closeModal = document.getElementById('closeModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalAuthor = document.getElementById('modalAuthor');
+            const modalAudio = document.getElementById('modalAudio');
+            
+            // 随机播放功能
+            randomBtn.addEventListener('click', function() {
+                if (productionData.length === 0) {
+                    alert('暂无数据可用');
+                    return;
+                }
+                
+                const randomIndex = Math.floor(Math.random() * productionData.length);
+                const randomItem = productionData[randomIndex];
+                
+                modalTitle.textContent = randomItem.title;
+                modalAuthor.textContent = randomItem.author;
+                modalAudio.src = randomItem.audio;
+                
+                randomModal.style.display = 'flex';
+                
+                // 自动播放音频
+                modalAudio.play().catch(e => {
+                    console.log("自动播放被阻止:", e);
+                });
+            });
+            
+            // 关闭弹窗
+            closeModal.addEventListener('click', function() {
+                randomModal.style.display = 'none';
+                modalAudio.pause();
+                modalAudio.currentTime = 0;
+            });
+            
+            // 点击弹窗外部关闭
+            randomModal.addEventListener('click', function(e) {
+                if (e.target === randomModal) {
+                    randomModal.style.display = 'none';
+                    modalAudio.pause();
+                    modalAudio.currentTime = 0;
+                }
+            });
+            
+            // 初始化内容 - 改为加载JSON数据
+            loadProductionData();
+        });
+    </script>
+</body>
+</html>
