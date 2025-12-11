@@ -305,25 +305,26 @@
                     const card = this.closest('.timeline-card');
                     const isExpanded = card.classList.contains('expanded');
                     
-                    document.querySelectorAll('.timeline-card').forEach(c => {
-                        c.classList.remove('expanded');
-                        c.querySelector('.timeline-link').innerHTML = '查看详细 <i class="fas fa-chevron-down"></i>';
-                    });
-                    
-                    if (!isExpanded) {
+                    // 如果是"收起详细"按钮
+                    if (isExpanded) {
+                        // 只收起当前卡片
+                        card.classList.remove('expanded');
+                        this.innerHTML = '查看详细 <i class="fas fa-chevron-down"></i>';
+                    } 
+                    // 如果是"查看详细"按钮
+                    else {
+                        // 先收起所有已展开的卡片
+                        document.querySelectorAll('.timeline-card.expanded').forEach(c => {
+                            c.classList.remove('expanded');
+                            const linkElement = c.querySelector('.timeline-link');
+                            if (linkElement) {
+                                linkElement.innerHTML = '查看详细 <i class="fas fa-chevron-down"></i>';
+                            }
+                        });
+                        
+                        // 展开当前卡片
                         card.classList.add('expanded');
                         this.innerHTML = '收起详细 <i class="fas fa-chevron-up"></i>';
-                    }
-                });
-            });
-            
-            const timelineCards = document.querySelectorAll('.timeline-card');
-            timelineCards.forEach(card => {
-                card.addEventListener('click', function(e) {
-                    if (!e.target.classList.contains('timeline-link')) {
-                        const link = this.querySelector('.timeline-link');
-                        this.classList.remove('expanded');
-                        link.innerHTML = '查看详细 <i class="fas fa-chevron-down"></i>';
                     }
                 });
             });
@@ -362,3 +363,4 @@
     </script>
 </body>
 </html>
+
