@@ -1,0 +1,92 @@
+[
+    {
+        "id": 1,
+        "title": "你做什么选择什么决定我都支持你",
+        "author": "海边月亮",
+        "audio": "audio/song1.mp3"
+    },
+    {
+        "id": 2,
+        "title": "你不叫第一名，也不叫好学生，你就是何家浩",
+        "author": "归棹",
+        "audio": "audio/song2.mp3"
+    },
+    {
+        "id": 3,
+        "title": "天塌下来，我和你扛着",
+        "author": "归棹",
+        "audio": "audio/song3.mp3"
+    },
+    {
+        "id": 4,
+        "title": "你可以做扛起家族重任的男子汉，也可以只做自己的男子汉",
+        "author": "归棹",
+        "audio": "audio/song4.mp3"
+    },
+    {
+        "id": 5,
+        "title": "我送你三千万，千万要开心，千万要健康，千万要幸福",
+        "author": "谈资",
+        "audio": "audio/song5.mp3"
+    },
+    {
+        "id": 6,
+        "title": "年年康乐，岁岁满全",
+        "author": "——to所有人",
+        "audio": "audio/song6.mp3"
+    },
+        {
+        "id": 7,
+        "title": "对，23岁了嘛，就成为他",
+        "author": "橘子娱乐",
+        "audio": "audio/song7.mp3"
+    },
+    {
+        "id": 8,
+        "title": "他的精神状态就是很稳，我也喜欢他这一点",
+        "author": "橘子娱乐",
+        "audio": "audio/song8.mp3"
+    },
+    {
+        "id": 9,
+        "title": "我会很喜欢他身上那种坚持的精神，就他无论做什么事情都会想要坚持到底",
+        "author": "橘子娱乐",
+        "audio": "audio/song9.mp3"
+    },
+    {
+        "id": 10,
+        "title": "在那个夏天，有橘子味的晚霞，还有闪闪发光的我们",
+        "author": "归棹",
+        "audio": "audio/song10.mp3"
+    },
+    {
+        "id": 11,
+        "title": "其实，该说的都说过了",
+        "author": "费加罗",
+        "audio": "audio/song11.mp3"
+    },
+    {
+        "id": 12,
+        "title": "在成长的路上遇到一段真挚的关系其实是很难的",
+        "author": "采访",
+        "audio": "audio/song12.mp3"
+    },
+    {
+        "id": 13,
+        "title": "人生小满皆万全，事事欢愉皆康乐",
+        "author": "to所有人",
+        "audio": "audio/song13.mp3"
+    },
+    {
+        "id": 14,
+        "title": "咚咚咚，在家吗？咚咚咚，在家",
+        "author": "归棹",
+        "audio": "audio/song14.mp3"
+    },
+    {
+        "id": 15,
+        "title": "海潮逐月，康柏长青。",
+        "author": "to所有人",
+        "audio": "audio/song15.mp3"
+    }
+]
